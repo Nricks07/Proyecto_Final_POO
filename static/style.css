@@ -1,0 +1,89 @@
+/* Definición de la paleta de colores */
+:root {
+  --blue-primary: #2563EB;   /* Azul principal */
+  --blue-light: #3B82F6;     /* Azul claro */
+  --blue-dark: #1E3A8A;      /* Azul oscuro */
+  --bg-color: #F1F5F9;       /* Fondo */
+  --text-color: #0F172A;     /* Texto */
+  --bg-UL: #cbcccd;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos para la barra de navegación */
+.navbar-custom {
+  background-color: var(--blue-dark);
+}
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+  color: white;
+}
+.navbar-custom .nav-link:hover {
+  color: var(--blue-light);
+}
+
+/* Botones personalizados */
+.btn-primary-custom {
+  background-color: var(--blue-primary);
+  color: white;
+  border: none;
+}
+.btn-primary-custom:hover {
+  background-color: var(--blue-light);
+  color: white;
+}
+
+.card-botton{
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border-radius: 15px;
+}
+.card-botton:hover{
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15) !important;
+  border: 1px solid var(--blue-primary) !important;
+}
+
+.menuServicios{
+  border-radius: 20px;
+  background-color: var(--bg-color);
+  color: rgb(0, 0, 0);
+  border: none;
+}
+
+.imgPort{
+  border-radius: 10px;
+  transform: 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filtros{
+  background-color: white;
+  transition: 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.filtros:hover{
+  background-color: var(--bg-color);
+  border-left: 4px solid var(--blue-dark);
+}
+.filtros.activo {
+    background-color: #f1f5f9;       /* Fondo gris clarito */
+    border-left: 4px solid #ef4444;  /* La línea roja/naranja a la izquierda */
+    font-weight: bold;               /* Texto en negritas */
+    color: #0f172a;                  /* Texto más oscuro */
+}
+
+.pedido{
+  border: 0;
+  background-color: white;
+  border-radius: 20px;
+}
+.imgPedido{
+  height: 80px;
+  border: 0px;
+  border-radius: 40px;
+}

@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block title %} Laptops/PC {% endblock %}
+{% block content %}
+<div class="row mb-5 align-items-center justify-content-center text-center text-md-start mt-5">
+    
+    <div class="col-md-5">
+        <h1 class="fw-bold display-5" style="color: var(--blue-dark);">Laptops y PC's</h1>
+        <p class="text-muted lead mt-2">Rellena el formulario según lo que requiera su equipo.</p>
+    </div>
+    
+    <div class="col-md-4 mt-4 mt-md-0 offset-md-1">
+        <img src="{{url_for('static', filename='img/computadorasServicios.jpg')}}" alt="Laptops y PC" class="img-fluid shadow-sm imgPort rounded-4" style="max-height: 300px; object-fit: cover;">
+    </div>
+</div>
+
+<hr class="my-5" style="border-top: 2px solid #000000;">
+
+<div class="row mb-5 p-2 align-items-center justify-content-center text-center">
+    <div class="col-md-8">
+        <div class="p-4 p-md-5 menuServicios shadow-sm rounded-4" style="background-color: var(--bg-color);">
+            <form action="" method="post">
+                
+                <div class="row mb-4 align-items-center">
+                    <label for="tipo_equipo" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Tipo de equipo:</label>
+                    <div class="col-md-7">
+                        <select name="tipo_equipo" id="tipo_equipo" class="border-0 p-2 form-select shadow-sm" style="cursor: pointer;" required>
+                            <option value="" selected disabled>Elige Laptop o PC...</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="PC">PC de Escritorio</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="seccion_laptop" class="d-none">
+                    <div class="row mb-4 align-items-center">
+                        <label for="marca_laptop" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Marca:</label>
+                        <div class="col-md-7">
+                            <select name="marca_laptop" id="marca_laptop" class="border-0 p-2 form-select shadow-sm" style="cursor: pointer;">
+                                <option value="" selected disabled>Elige la marca...</option>
+                                <option value="HP">HP</option>
+                                <option value="Dell">Dell</option>
+                                <option value="Lenovo">Lenovo</option>
+                                <option value="Asus">Asus</option>
+                                <option value="Acer">Acer</option>
+                                <option value="Apple">Apple (MacBook)</option>
+                                <option value="Otro">Otra marca</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4 align-items-center">
+                        <label for="modelo_laptop" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Modelo:</label>
+                        <div class="col-md-7 text-start">
+                            <input type="text" name="modelo_laptop" id="modelo_laptop" class="form-control border-0 p-2 shadow-sm" placeholder="Ej. Inspiron 15, Pavilion (Opcional)">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <label for="mantenimiento" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Mantenimiento:</label>
+                    <div class="col-md-7">
+                        <select name="mantenimiento" id="mantenimiento" class="border-0 p-2 form-select shadow-sm" style="cursor: pointer;" required>
+                            <option value="" selected disabled>Elige el tipo de mantenimiento.</option>
+                            <option value="Sencillo">Sencillo</option>
+                            <option value="Estandar">Estándar</option>
+                            <option value="Completo">Completo</option>
+                            <option value="Ninguno">Ninguno</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label for="programas" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Programas:</label>
+                    <div class="col-md-7 text-md-start">
+                        <select name="programas" id="programas" class="border-0 p-2 form-select shadow-sm" style="cursor: pointer;" multiple required>
+                            <option value="" disabled>Selecciona los programas a instalar. (Ctrl+click)</option>
+                            <option value="Word">Word</option>
+                            <option value="Excel">Excel</option>
+                            <option value="Outlook">Outlook</option>
+                            <option value="Adobe">Adobe</option>
+                            <option value="Photoshop">Photoshop</option>
+                            <option value="Ninguno">Ninguno</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label for="piezas" class="col-md-3 text-dark fw-bold text-md-end col-form-label">Piezas:</label>
+                    <div class="col-md-7">
+                        <select name="piezas" id="piezas" class="form-select border-0 p-2 shadow-sm" style="cursor: pointer;" multiple required>
+                            <option value="" disabled>Selecciona las piezas a instalar.</option>
+                            <option value="RAM">RAM</option>
+                            <option value="Almacenamiento">Almacenamiento (SSD/DD)</option>
+                            <option value="Grafica">Gráfica</option>
+                            <option value="Fuente de poder">Fuente de poder</option>
+                            <option value="Tarjeta madre">Tarjeta madre</option>
+                            <option value="Teclado">Teclado</option>
+                            <option value="Pantalla">Pantalla/monitor</option>
+                            <option value="Ninguna">Ninguna</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label for="detalles" class="col-md-3 col-form-label fw-bold text-dark text-md-end">Detalles:</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control rounded-3 border-0 p-3 shadow-sm" id="detalles" name="detalles" rows="3" placeholder="Describe aquí qué le pasa a tu equipo..."></textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <label for="update" class="fw-bold col-md-3 text-md-end text-dark col-form-label">Actualización (OS):</label>
+                    <div class="col-md-1 text-md-start">
+                        <input type="checkbox" name="update" id="update" class="fs-5 border-0 p-2 form-check-input shadow-sm" style="cursor: pointer;">
+                    </div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-md-7 offset-md-3">
+                        <button type="submit" class="btn-primary-custom btn w-100 py-2 shadow-sm rounded-pill fw-bold">Generar Ticket</button>
+                    </div>
+                </div> 
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        
+        //Logica para mostrar/ocultar
+        const selectTipo = document.getElementById('tipo_equipo');
+        const seccionLaptop = document.getElementById('seccion_laptop');
+
+        selectTipo.addEventListener('change', function() {
+            if (selectTipo.value === 'Laptop') {
+                seccionLaptop.classList.remove('d-none'); // Muestra la caja
+            } else {
+                seccionLaptop.classList.add('d-none');    // Oculta la caja
+            }
+        });
+
+        //Lagica de "Ninguno" - Programas
+        const programChk = document.getElementById('programas');
+        programChk.addEventListener('change', function(){
+            let selec = [];
+            for (let i=0; i<programChk.options.length; i++){
+                if(programChk.options[i].selected){
+                    selec.push(programChk.options[i].value);
+                }
+            }
+            if (selec.includes("Ninguno") && selec.length > 1) {
+                for(let i=0; i<programChk.options.length; i++){
+                    if(programChk.options[i].value !== "Ninguno"){
+                        programChk.options[i].selected = false;
+                    }
+                }
+            }
+        });
+
+        // Logica de "Ninguna" - piezas
+        const piezasChk = document.getElementById('piezas');
+        piezasChk.addEventListener('change', function(){
+            let selec = [];
+            for (let i=0; i<piezasChk.options.length; i++){
+                if(piezasChk.options[i].selected){
+                    selec.push(piezasChk.options[i].value);
+                }
+            }
+            if (selec.includes("Ninguna") && selec.length > 1) {
+                for(let i=0; i<piezasChk.options.length; i++){
+                    if(piezasChk.options[i].value !== "Ninguna"){
+                        piezasChk.options[i].selected = false;
+                    }
+                }
+            }
+        });
+        
+    });
+</script>
+{% endblock %}

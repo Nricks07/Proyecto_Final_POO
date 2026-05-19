@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %} Celulares {% endblock %}
+{% block content %}
+<div class="row mb-5 align-items-center justify-content-center text-center text-md-start mt-5">
+    
+    <!-- Lado Izquierdo: Título e Instrucciones -->
+    <div class="col-md-5">
+        <!-- Cambiamos display-0 por display-5 para un tamaño correcto -->
+        <h1 class="fw-bold display-5" style="color: var(--blue-dark);">Consolas</h1>
+        <p class="text-muted lead mt-2">Selecciona la marca de tu dispositivo para ver los servicios disponibles.</p>
+    </div>
+    
+    <!-- Lado Derecho: Menú de Marcas -->
+    <div class="col-md-4 mt-4 mt-md-0 offset-md-1">
+        <img src="{{url_for('static', filename='img/consolasCanva.png')}}" alt="Consolas" class="img-fluid shadow-sm imgPort" style="max-height: 300px;">
+    </div>
+</div>
+
+<hr class="my-5" style="border-top: 2px solid #000000;">
+
+<div class="row mb-5 p-2 align-items-center justify-content-center text-center">
+    <div class="col-md-8">
+        <div class="p-4 p-md-5 menuServicios shadow-sm" style="background-color: var(--bg-color);">
+            <form action="" method="post">
+                <div class="row mb-4 align-items-center">
+                    <label for="marca" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Consola:</label>
+                    <div class="col-md-3">
+                    <select name="marca" id="marca" class="border-0 p-2 form-select" required>
+                        <option value="" selected disabled>Elige la marca.</option>
+                        <option value="PlayStation">PlayStation</option>
+                        <option value="Xbox">Xbox</option>
+                        <option value="Nintendo">Nintendo</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="modelo" id="modelo" class="border-0 p-2 form-select" required>
+                        <option value="" selected disabled>Elige el modelo.</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <label for="reparacion" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Control:</label>
+                    <div class="col-md-7 text-md-start">
+                    <select name="reparacion_control" id="reparacion_control" class="border-0 p-2 form-select shadow-sm" style="cursor: pointer;">
+                        <option value="" selected disabled>Elige problema...</option>
+                        <option value="(Control) Drift">Drift</option>
+                        <option value="(Control) No prende">No prende</option>
+                        <option value="(Control) No carga">No carga</option>
+                        <option value="(Control) Otro">Otro</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label for="detalles" class="col-md-3 col-form-label fw-bold text-dark text-md-end">Detalles</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control rounded-3 border-0 p-3" id="detalles" name="detalles" rows="2" placeholder="Describe aquí qué le pasa a tu equipo..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-7 offset-md-3">
+                        <button type="submit" class="btn-primary-custom btn w-100 py-2 shadow-sm">Generar Ticket</button>
+                    </div>
+                </div> 
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- parte logica con js-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectMarca = document.getElementById('marca');
+        const selectModelo = document.getElementById('modelo');
+
+        // Nuestro diccionario de consolas
+        const modelosPorMarca = {
+            'PlayStation': ['PS5', 'PS5 Digital', 'PS4 Pro', 'PS4 Slim', 'PS4 Clásica', 'PS3'],
+            'Xbox': ['Xbox Series X', 'Xbox Series S', 'Xbox One X', 'Xbox One S', 'Xbox One', 'Xbox 360'],
+            'Nintendo': ['Nintendo Switch OLED', 'Nintendo Switch', 'Nintendo Switch Lite', 'Wii U', 'Wii']
+        };
+
+        selectMarca.addEventListener('change', function() {
+            const marcaElegida = selectMarca.value;
+            selectModelo.innerHTML = '<option value="" selected disabled>Elige el modelo...</option>';
+
+            if (modelosPorMarca[marcaElegida]) {
+                const modelos = modelosPorMarca[marcaElegida];
+                modelos.forEach(function(modelo) {
+                    const nuevaOpcion = document.createElement('option');
+                    nuevaOpcion.value = modelo;       
+                    nuevaOpcion.textContent = modelo;
+                    selectModelo.appendChild(nuevaOpcion);
+                });
+            } else {
+                const nuevaOpcion = document.createElement('option');
+                nuevaOpcion.value = "Generico";
+                nuevaOpcion.textContent = "Especificar modelo en detalles...";
+                selectModelo.appendChild(nuevaOpcion);
+            }
+        });
+    });
+</script>
+{% endblock %}

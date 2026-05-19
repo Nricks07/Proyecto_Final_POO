@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %} Celulares {% endblock %}
+{% block content %}
+<div class="row mb-5 align-items-center justify-content-center text-center text-md-start mt-5">
+    
+    <!-- Lado Izquierdo: Título e Instrucciones -->
+    <div class="col-md-5">
+        <!-- Cambiamos display-0 por display-5 para un tamaño correcto -->
+        <h1 class="fw-bold display-5" style="color: var(--blue-dark);">Celulares y Telefonía</h1>
+        <p class="text-muted lead mt-2">Selecciona la marca de tu dispositivo para ver los servicios disponibles.</p>
+    </div>
+    
+    <!-- Lado Derecho: Menú de Marcas -->
+    <div class="col-md-4 mt-4 mt-md-0 offset-md-1">
+        <img src="{{url_for('static', filename='img/celularesPort.jpg')}}" alt="Celulares" class="img-fluid shadow-sm imgPort" style="max-height: 300px;">
+    </div>
+</div>
+
+<hr class="my-5" style="border-top: 2px solid #000000;">
+
+<div class="row mb-5 p-2 align-items-center justify-content-center text-center">
+    <div class="col-md-8">
+        <div class="p-4 p-md-5 menuServicios shadow-sm" style="background-color: var(--bg-color);">
+            {% set alerta = request.args.get('alerta') %}
+
+            {% if alerta == 'necesita_registro' %}
+            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                <strong>¡Acceso denegado!</strong> Necesitas iniciar sesión o crear una cuenta para solicitar una reparación.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            
+            <form action="" method="post">
+                <div class="row mb-4 align-items-center">
+                    <label for="marca" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Marca:</label>
+                    <div class="col-md-3">
+                    <select name="marca" id="marca" class="border-0 p-2 form-select" required>
+                        <option value="" selected disabled>Elige la marca.</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Sony">Sony</option>
+                        <option value="Huawei">Huawei</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="modelo" id="modelo" class="border-0 p-2 form-select" required>
+                        <option value="" selected disabled>Elige el modelo.</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4 align-items-center">
+                    <label for="reparacion" class="col-md-3 fw-bold text-dark col-form-label text-md-end">Reparación:</label>
+                    <div class="col-md-7 text-md-start">
+                    <select name="reparacion" id="reparacion" class="border-0 p-2 form-select" multiple required>
+                        <option value="" selected disabled>Selecciona la reparacion. (Crl+click)</option>
+                        <option value="Pantalla">Pantalla</option>
+                        <option value="Bateria">Bateria</option>
+                        <option value="Camara">Camara</option>
+                        <option value="Control de carga">Control de carga</option>
+                        <option value="Carcasa">Carcasa</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <label for="detalles" class="col-md-3 col-form-label fw-bold text-dark text-md-end">Detalles</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control rounded-3 border-0 p-3" id="detalles" name="detalles" rows="2" placeholder="Describe aquí qué le pasa a tu equipo..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-md-7 offset-md-3">
+                        <button type="submit" class="btn-primary-custom btn w-100 py-2 shadow-sm">Generar Ticket</button>
+                    </div>
+                </div> 
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- parte logica con js-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectMarca = document.getElementById('marca');
+        const selectModelo = document.getElementById('modelo');
+
+        const modelosPorMarca = {
+            'Apple': ['iphone 17 Pro Max', 'iphone 17 Pro', 'iphone 17','iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16'],
+            'Samsung': ['Galaxy A54', 'Galaxy S23', 'Galaxy S24 Ultra'],
+            'Xiaomi': ['Redmi Note 12', 'Poco X5 Pro', 'Xiaomi 14']
+        };
+
+        selectMarca.addEventListener('change', function() {
+            const marcaElegida = selectMarca.value;
+            selectModelo.innerHTML = '<option value="" selected disabled>Elige el modelo...</option>';
+
+            if (modelosPorMarca[marcaElegida]) {
+                const modelos = modelosPorMarca[marcaElegida];
+                modelos.forEach(function(modelo) {
+                    const nuevaOpcion = document.createElement('option');
+                    nuevaOpcion.value = modelo;       
+                    nuevaOpcion.textContent = modelo;
+                    selectModelo.appendChild(nuevaOpcion);
+                });
+            } else {
+                const nuevaOpcion = document.createElement('option');
+                nuevaOpcion.value = "Generico";
+                nuevaOpcion.textContent = "Especificar modelo en detalles...";
+                selectModelo.appendChild(nuevaOpcion);
+            }
+        });
+
+    });
+</script>
+{% endblock %}

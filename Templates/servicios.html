@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title  %} Servicios {% endblock %}
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h2 class="fw-bold" style="color: var(--blue-dark);">Que reparacion necesitas?</h2>
+        <p class="text-muted lead">Seleccina la categoria de tu dispositivo para generar el ticket</p>
+    </div>
+</div>
+
+<div class="row justify-content-center text-center">
+    <!-- Celular -->
+    <div class="col-md-5 mb-4">
+        <a href="{{url_for('cellphone')}}" class="text-decoration-none">
+            <div class="card card-botton h-100 border-0 shadow-sm p-4 ">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='img/telefonoServicio.png') }}" alt="Icono Celular" class="img-fluid mb-3" style="max-height: 100px;">
+                    <h4 class="fw-bold text-dark">Celulares</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+    <!--- Laptops/pc -->
+    <div class="col-md-5 mb-4">
+        <a href="{{url_for('laptops_PC')}}" class="text-decoration-none">
+            <div class="card card-botton h-100 border-0 shadow-sm p-4 ">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='img/pcServicio.png') }}" alt="Icono PC" class="img-fluid mb-3" style="max-height: 100px;">
+                    <h4 class="fw-bold text-dark">Laptops/PC</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Consolas -->
+    <div class="col-md-5 mb-4">
+        <a href="{{url_for('consolas')}}" class="text-decoration-none">
+            <div class="card card-botton h-100 border-0 shadow-sm p-4 ">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='img/consolasServicios.png') }}" alt="Icono Consola" class="img-fluid mb-3" style="max-height: 100px;">
+                    <h4 class="fw-bold text-dark">Consolas</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Otro -->
+    <div class="col-md-5 mb-4">
+        <a href="{{url_for('otros')}}" class="text-decoration-none">
+            <div class="card card-botton h-100 border-0 shadow-sm p-4 ">
+                <div class="card-body">
+                    <img src="{{ url_for('static', filename='img/otroServicios.png') }}" alt="Icono Otro" class="img-fluid mb-3" style="max-height: 100px;">
+                    <h4 class="fw-bold text-dark">Otro</h4>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

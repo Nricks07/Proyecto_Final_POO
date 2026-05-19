@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %} Tickets {% endblock %}
+{% block content %}
+    <div class="row md-4 justify-content-center">
+        <div class="col-md-3">
+            <div class="menuServicios bg-white rounded-4 shadow-sm py-4 mb-4">
+                <h4 class="fw-bold text-center mb-3" style="color: var(--blue-dark);">Filtros</h4>
+                <hr style="border-top: 2px solid #454546;">
+                    <ul class="navbar-nav ms-auto">
+                        <a href="{{ url_for('Tickets', filtro='General') }}" class="p-2 filtros nav-link {% if filtroActual == 'General' %}fw-bold text-dark{% else %}text-muted{% endif %}">
+                        <li class="nav-item px-2">General</li>
+                    </a>
+                    <a href="{{ url_for('Tickets', filtro='En proceso') }}" class="p-2 filtros nav-link {% if filtroActual == 'En proceso' %}fw-bold text-dark{% else %}text-muted{% endif %}">
+                        <li class="nav-item px-2">En proceso</li>
+                    </a>
+                    <a href="{{ url_for('Tickets', filtro='Finalizado') }}" class="p-2 filtros nav-link {% if filtroActual == 'Finalizado' %}fw-bold text-dark{% else %}text-muted{% endif %}">
+                        <li class="nav-item px-2">Finalizados</li>
+                    </a>
+                    <a href="{{ url_for('Tickets', filtro='Cancelado') }}" class="p-2 filtros nav-link {% if filtroActual == 'Cancelado' %}fw-bold text-dark{% else %}text-muted{% endif %}">
+                        <li class="nav-item px-2">Cancelados</li>
+                    </a>
+                    </ul>
+            </div>
+            <div class="menuServicios bg-white rounded-4 shadow-sm p-4 text-center">
+                <img src="{{url_for('static',filename='img/pjIcon.png')}}" alt="Persona" style="max-width: 125px;">
+                <h5 class="fw-bold text-dark mb-0">{{ session.nombre }}</h5>
+                <p class="text-muted small mt-1">{{ session.rol }}</p>
+                
+                <div class="bg-light rounded-3 p-3 mt-3 d-flex flex-column gap-2">
+                    <small class="fw-bold" style="color: var(--blue-primary);">Tickets Activos: {{ activos }}</small>
+                    <small class="fw-bold" style="color: var(--blue-primary);">Equipos reparados: {{ reparados }}</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <h3 class="fw-bold mb-4" style="color: var(--blue-dark);">Mis tickets</h3>
+
+            {% for ticket in ticketFiltrado %}
+            
+                <div class="p-3 bg-white rounded-4 shadow-sm mb-3">
+                    <div class="p-2 d-flex justify-content-between align-items-center mb-2">
+                        <p class="text-muted mb-0 small">Fecha: {{ ticket.fecha }}</p>
+                        
+                        <button type="button" class="btn btn-link fw-bold text-decoration-none p-0" style="color: var(--blue-primary);" data-bs-toggle="modal" data-bs-target="#modalTicket{{ ticket.id_solicitud }}">
+                            Ver detalles
+                        </button>
+                    </div>
+
+                    <hr class="mt-2 mb-2">
+                    
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h4 class="fw-bold mb-0 text-dark">{{ ticket.marca }} / {{ ticket.modelo }}</h4>
+                            <p class="mb-0 text-muted small">Pedido: #{{ ticket.id_solicitud }}</p>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-md-end align-items-center mt-md-0">
+                            <h5 class="text-muted fw-bold me-3">{{ ticket.estado }}</h5>
+                            
+                            {% if ticket.estado == 'Pendiente' %}
+                                <span style="height: 22px; width: 22px; background-color: #ffc107; border-radius: 50%; box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);"></span>
+                            {% elif ticket.estado == 'En proceso' %}
+                                <span style="height: 22px; width: 22px; background-color: #0dcaf0; border-radius: 50%; box-shadow: 0 0 8px rgba(13, 202, 240, 0.5);"></span>
+                            {% elif ticket.estado == 'Finalizado' %}
+                                <span style="height: 22px; width: 22px; background-color: #198754; border-radius: 50%; box-shadow: 0 0 8px rgba(25, 135, 84, 0.5);"></span>
+                            {% else %}
+                                <span style="height: 22px; width: 22px; background-color: #dc3545; border-radius: 50%; box-shadow: 0 0 8px rgba(220, 53, 69, 0.5);"></span>
+                            {% endif %}
+                        </div>
+                    </div>   
+                </div>
+
+                <div class="modal fade" id="modalTicket{{ ticket.id_solicitud }}" tabindex="-1" aria-labelledby="modalLabel{{ ticket.id_solicitud }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content rounded-4 border-0 shadow">
+                            
+                            <div class="modal-header border-bottom-0 pb-0">
+                                <h5 class="modal-title fw-bold text-dark" id="modalLabel{{ ticket.id_solicitud }}">Ticket #{{ ticket.id_solicitud }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            
+                            <div class="modal-body">
+                                <div class="bg-light rounded-3 p-3 mb-3">
+                                    <p class="mb-1"><strong style="color: var(--blue-dark);">Equipo:</strong> {{ ticket.categoria }} ({{ ticket.marca }} - {{ ticket.modelo }})</p>
+                                    <p class="mb-1"><strong style="color: var(--blue-dark);">Estado:</strong> {{ ticket.estado }}</p>
+                                    <p class="mb-0"><strong style="color: var(--blue-dark);">Ingreso:</strong> {{ ticket.fecha }}</p>
+                                </div>
+                                
+                                <h6 class="fw-bold mb-2">Servicios Solicitados:</h6>
+                                <ul class="text-muted mb-3">
+                                    {% for problema in ticket.problemas %}  
+                                        <li>{{ problema }}</li>
+                                    {% endfor %}
+                                </ul>
+
+                                <h6 class="fw-bold mb-2">Detalles del cliente:</h6>
+                                <p class="text-muted border p-2 rounded-3 bg-white" style="font-size: 0.95rem;">
+                                    {{ ticket.detalles }}
+                                </p>
+                            </div>
+                            
+                            <div class="modal-footer border-top-0 pt-0">
+                                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cerrar</button>
+                                
+                                {% if ticket.estado == 'Pendiente' %}
+                                    <a href="{{ url_for('cancelar_ticket', id_ticket=ticket.id_solicitud) }}" class="btn btn-danger rounded-pill px-4">
+                                    Cancelar Ticket
+                                    </a>
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-white rounded-4 shadow-sm p-5 text-center mb-4">
+                    <h1 class="display-1 text-muted mb-3">📭</h1>
+                    <h4 class="text-muted fw-bold">Aún no tienes tickets en esta categoría.</h4>
+                    <p class="text-muted">Cuando solicites un servicio, aparecerá aquí.</p>
+                    <a href="{{url_for('servicios')}}" class="btn btn-primary-custom mt-3 px-4">Solicitar Reparación</a>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}

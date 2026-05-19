@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %} Inicio de sesion {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4 fw-bold" style="color: var(--blue-dark);">Iniciar Sesion</h3>
+                {% set alerta=request.args.get('alerta') %}
+                {% if alerta=='necesita_registro' %}
+                    <div class="alert alert-warning alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                        <strong>Acceso denegado</strong> Necesitas iniciar sesion para solicitar una reparacion.
+                        <button type="button" class="btn-close" data-bs-dismiss="aler" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                {% if alert=='credencialesMalas' %}
+                    <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4 shadow-sm" role="alert">
+                        <strong>Ups</strong> El correo o la contraseña son incorrectos.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+                <!-- FORMULARIO -->
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <label for="correo" class="form-label text-muted fw-bold">Correo Electronico: </label>
+                        <input type="email" class="form-control p-2" id="correo" name="correo" placeholder="ejemplo@gmail.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-muted fw-bold">Contrseña: </label>
+                        <input type="password" class="form-control p-2" id="password" name="password" placeholder="Introduce tu contraseña" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary-custom btn-lg shadow-sm">Entrar a mi cuenta</button>
+                    </div>
+                    <div class="mb-3">
+                        <p for="crearCuenta">No tienes cuenta? <a href="{{url_for('crearCuenta')}}">Crear cuenta</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</di>
+{% endblock %}
