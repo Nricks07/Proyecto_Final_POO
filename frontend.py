@@ -4,9 +4,12 @@ import customtkinter as ctk
 from tkinter import messagebox
 from tkinter import ttk
 
+# --- CONFIGURACIÓN ESTÉTICA GLOBAL ---
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
 
+# --- INSTANCIACIÓN DE SERVICES DEL BACKEND ---
+# Se inicializan los controladores que sirven de puente con las tablas de Supabase
 sist_admin = Administrador()
 sist_stock = Stock()
 sist_solicitud = Solicitudes()
@@ -17,15 +20,21 @@ sist_laptops = Piezas_Laptop()
 sist_controles = controles()
 
 def aplicar_estilo_tabla(ventana):
+    """ Injecta estilos personalizados sobre el widget nativo Treeview de Tkinter """
     style = ttk.Style(ventana)
     style.theme_use("default")
+    
+    # Configuración del cuerpo de las tablas (Filas)
     style.configure("Treeview", 
                     background="#1E1E24", 
                     foreground="#ECEFF1", 
                     rowheight=28, 
                     fieldbackground="#1E1E24",
                     font=("Segoe UI", 10))
+    # Color de realce al seleccionar un registro
     style.map('Treeview', background=[('selected', '#1F618D')], foreground=[('selected', '#FFFFFF')])
+    
+    # Configuración visual de las cabeceras de columnas
     style.configure("Treeview.Heading", 
                     background="#2C3E50", 
                     foreground="#A6ACAF", 
@@ -92,10 +101,11 @@ def ventana_administrador(sist_admin):
     root_admin.mainloop()
 
 def ventana_solicitudes(sist_admin):
+    """ Ventana de control de órdenes. Implementa CTkToplevel para no romper el mainloop """
     ventana_soli = ctk.CTkToplevel()
     ventana_soli.title("Módulo - Gestión de Solicitudes de Servicio")
     ventana_soli.geometry("1000x500")
-    ventana_soli.grab_set()
+    ventana_soli.grab_set() # Bloquea la interacción con la ventana padre
 
     try:
         respuesta = sist_admin.gest_soli()
@@ -106,6 +116,7 @@ def ventana_solicitudes(sist_admin):
 
     aplicar_estilo_tabla(ventana_soli)
 
+    # CONSTRUCCIÓN DINÁMICA DE LA TABLA (TREEVIEW)
     columnas = ("id", "id_cliente", "tipo", "categoria", "descripcion", "estado", "costo", "fecha_recibo")
     tabla = ttk.Treeview(ventana_soli, columns=columnas, show="headings")
     
@@ -121,11 +132,13 @@ def ventana_solicitudes(sist_admin):
     scrollbar.pack(side="right", fill="y")
     tabla.pack(fill="both", expand=True, padx=20, pady=20)
 
+    # Inyección de los datos del Backend en las filas de la tabla
     if datos:
         for fila in datos:
             tabla.insert("", "end", values=(fila.get("id", ""), fila.get("id_cliente", ""), fila.get("tipo", ""), fila.get("categoria", ""), fila.get("descripcion", ""), fila.get("estado", ""), f"${fila.get('costo', 0)}", fila.get("fecha_recibo", "")))
 
     def actualizar_estado_logica():
+        """ Obtiene el registro seleccionado del UI, lo actualiza en DB y refresca la tabla en caliente """
         seleccion = tabla.selection()
         if not seleccion:
             messagebox.showwarning("Atención", "Selecciona una fila para modificar el estado.")
@@ -133,12 +146,17 @@ def ventana_solicitudes(sist_admin):
         nuevo_estado = menu_estado.get()
         item_id = seleccion[0]
         valores_actuales = list(tabla.item(item_id, "values"))
+        
+        # Petición remota al Backend
         sist_admin.cambiar_estado_soli(valores_actuales[0], nuevo_estado)
+        
+        # Sincronización visual inmediata (Evita recargar toda la ventana)
         valores_actuales[5] = nuevo_estado
         tabla.item(item_id, values=valores_actuales)
         messagebox.showinfo("Éxito", f"El pedido {valores_actuales[0]} cambió a: {nuevo_estado}")
 
     def eliminar_pedido_logica():
+        """ Eliminación física/lógica en BD y remoción de fila en Treeview """
         seleccion = tabla.selection()
         if not seleccion:
             messagebox.showwarning("Atención", "Selecciona un registro para eliminar.")
@@ -147,7 +165,7 @@ def ventana_solicitudes(sist_admin):
         id_db = tabla.item(item_id, "values")[0]
         if messagebox.askyesno("Confirmar", f"¿Eliminar permanentemente el ticket ID {id_db}?"):
             sist_solicitud.eliminar_soli(id_db)
-            tabla.delete(item_id)
+            tabla.delete(item_id) 
 
     frame_controles = ctk.CTkFrame(ventana_soli, fg_color="#2C3E50")
     frame_controles.pack(pady=10, padx=20, fill="x")
@@ -192,6 +210,7 @@ def ventana_gest_clientes(sist_admin):
 
     tabla.pack(fill="both", expand=True, padx=20, pady=20)
 
+    # Conversión de Supabase a celdas legibles del Treeview
     if datos:
         for f in datos:
             tabla.insert("", "end", values=(f.get("id", ""), f.get("Nombre", ""), f.get("Email", ""), f.get("Celular", "")))
@@ -289,6 +308,7 @@ def ventana_distribuidores(sist_admin):
     ctk.CTkButton(ventana_dist, text="Regresar", fg_color="#7F8C8D", command=ventana_dist.destroy).pack(pady=15)
 
 def ventana_stock():
+    """ Menú principal para el inventario"""
     v_stock = ctk.CTkToplevel()
     v_stock.title("Inventario Central")
     v_stock.geometry("300x380")
@@ -353,7 +373,6 @@ def ventana_celulares():
 
     aplicar_estilo_tabla(v_cel)
     
-    # Columnas principales representativas del stock masivo
     columnas = ("id", "marca", "modelo", "p_venta", "p_prov", "b_venta", "b_prov", "c_venta", "c_prov", "cant_p", "cant_b")
     tabla = ttk.Treeview(v_cel, columns=columnas, show="headings")
     
@@ -448,12 +467,17 @@ def ventana_controles():
 
     ctk.CTkButton(v_ctrl, text="Regresar al Stock", fg_color="#7F8C8D", command=v_ctrl.destroy).pack(pady=10)
 
+
+# --- PUNTO DE ENTRADA DEL MÓDULO (BOOTSTRAP) ---
 if __name__ == "__main__":
+    # Inicializa el flujo directamente en la pantalla de control administrativo
     ventana_administrador(sist_admin)
+    
+    # Bloque de contingencia para pruebas locales del widget de mandos
     ventana_controles = ctk.CTk()
     ventana_controles.title("Controles")
     ventana_controles.geometry("400x350")
-    limpiar_pantalla(ventana_controles)
+    # Limpiar_pantalla(ventana_controles)
     btn_salir = ctk.CTkButton(ventana_controles, text="Salir", command=ventana_stock)
     btn_salir.pack(pady=10)
     ventana_controles.mainloop()
